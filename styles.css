@@ -1,0 +1,26 @@
+input {
+  width: 100%;
+  font-size: 1.5em;
+}
+
+/* properties of content, excluding header and footer */
+.web_content  {
+  max-width: 620px;
+  margin: auto;
+}
+
+.suggestion_box {
+  display: none;
+}
+
+.suggestion_box ul {
+  background-color: #F5F5F5;
+  list-style-type: none;
+  list-style-position: inside;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  padding: 8px 16px;
+}

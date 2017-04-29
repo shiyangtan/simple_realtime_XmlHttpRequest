@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>US Major Cities</title>
+  </head>
+
+  <body>
+
+    <div class="web_content">
+
+      <h1>Welcome, User!</h1>
+      <h3>RealTime Search using XMLHttpRequest</h3>
+
+      <div> <!-- realtime search components -->
+
+        <div>
+          <input type="text" autocomplete="off" name="realtime_input" id="realtime_search_input"
+          placeholder="Quick search of US major cities">
+        </div>
+
+        <div class="suggestion_box" id="realtime_suggestion">
+
+          <div>
+            <ul id="suggestion_list">
+              <!-- data retrieved from server -->
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div> <!-- end of web content -->
+
+  </body>
+
+  <script>
+    
+
+    // events triggered when user enter keyword
+    document.getElementById('realtime_search_input').addEventListener('keyup', function(){
+      var suggestion_div = document.getElementById("realtime_suggestion");
+
+      // clear the content of suggestion box
+      var ul = document.getElementById('suggestion_list')
+      var fc = ul.firstChild;
+      while(fc){
+        ul.removeChild(fc);
+        fc = ul.firstChild;
+      }
+
+      // request info from server based on user input
+      var keyword = this.value;
+      if (keyword.length >= 2) {
+        // make Ajax request here
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var myObj = JSON.parse(this.responseText);
+                if(myObj.length > 0){
+                  // keyword is found in database
+                  for(x in myObj){
+                    // push every record into suggestion box
+                    var li = document.createElement('li');
+                    var node = document.createTextNode(myObj[x].city_name);
+                    li.appendChild(node);
+                    ul.appendChild(li);
+                  }
+                } else {
+                  // no record matched
+                  var li = document.createElement('li');
+                  var node = document.createTextNode('No result found');
+                  li.appendChild(node);
+                  ul.appendChild(li);
+                }
+           }
+        };
+        xhttp.open("GET", "query_db.php?keyword=" + keyword, true);
+        xhttp.send();
+        suggestion_div.style.display = "block";
+      } else {
+        // user enter less than 2 characters,
+        // no request to server and don't show suggestion box
+        suggestion_div.style.display = "none";
+      }
+
+    });
+
+  </script>
+</html>
